@@ -1,0 +1,8 @@
+Patches to Consider
+
+* Combo
+** View multiple tags
+* ColorBar
+** Different fg & bg colors for tags, title & status
+* Cool Autostart
+** Execute shell jobs
