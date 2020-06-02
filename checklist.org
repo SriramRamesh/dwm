@@ -6,3 +6,52 @@ Patches to Consider
 ** Different fg & bg colors for tags, title & status
 * Cool Autostart
 ** Execute shell jobs
+* Deck
+** Add Deck layout
+* FakeFullScreen
+** Limit apps to alloted space
+* Other bar setup
+** current_desktop
+** ewmhtags
+* fibonacci
+** Fib layout
+
+* FlexTile
+** Tile layout on adrenaline
+* GridMode
+** equal windows
+* hide vacant tags
+* holdbar
+** shows top bar only if you press some key
+* inplacerotate
+** rotate w/o affecting focus
+* ispermanent
+** Allow to pin windows
+* keymodes
+** CMD mode & INS mode
+** depends on FlexTile
+** emulate vim
+* MOveStack !!
+** Emulate Mod+J and MOd+K
+* systray
+** system tray
+* Three Column Layout
+* titlecolor
+** Add fg & bg to tile
+* vanity gap
+** Like i3-gaps
+** Configure full gaps
+* viewontag
+** Follow a window to the tag it is being moved to
+* Unknown
+** xkb
+* To Read more...
+** xtile
+* zoomswap
+** Modify swap bhvr to stack
+* namedscratchpads
+* nametag
+* noborder !! or removeborder( inspired frm useless gaps )
+* Pango
+* pertag !!
+* push up/down !!
