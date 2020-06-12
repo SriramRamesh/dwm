@@ -228,6 +228,7 @@ static void tagmon(const Arg *arg);
 static void tile(Monitor *);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
+static void togglefullscr(const Arg *arg);
 static void toggletag(const Arg *arg);
 static void toggleview(const Arg *arg);
 static void unfocus(Client *c, int setfocus);
@@ -915,7 +916,10 @@ focusstack(const Arg *arg)
 
 	if(i < 0)
 		return;
-
+	if (!selmon->sel || selmon->sel->isfullscreen){
+		/* system("echo 'selmon not null'>>/home/sriram/dwm.log"); */
+		return;
+	}
 	for(p = NULL, c = selmon->clients; c && (i || !ISVISIBLE(c));
 		i -= ISVISIBLE(c) ? 1 : 0, p = c, c = c->next);
 	focus(c ? c : p);
@@ -1317,7 +1321,7 @@ pushstack(const Arg *arg) {
 	int i = stackpos(arg);
 	Client *sel = selmon->sel, *c, *p;
 
-	if(i < 0)
+	if(i < 0 || sel->isfullscreen)
 		return;
 	else if(i == 0) {
 		detach(sel);
@@ -1794,6 +1798,9 @@ sigterm(int unused)
 void
 spawn(const Arg *arg)
 {
+	if (!selmon->sel || selmon->sel->isfullscreen){
+		return;
+	}
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
@@ -1912,11 +1919,18 @@ togglefloating(const Arg *arg)
 }
 
 void
+togglefullscr(const Arg *arg)
+{
+  if(selmon->sel)
+    setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+}
+
+void
 toggletag(const Arg *arg)
 {
 	unsigned int newtags;
 
-	if (!selmon->sel)
+	if (!selmon->sel || selmon->sel->isfullscreen)
 		return;
 	newtags = selmon->sel->tags ^ (arg->ui & TAGMASK);
 	if (newtags) {
