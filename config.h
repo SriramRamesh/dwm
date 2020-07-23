@@ -36,11 +36,11 @@ static const Rule rules[] = {
 	/* class      instance    title       tags mask     isfloating   monitor */
 	{ "Gimp",         NULL,   NULL,       0,            1,           -1 },
 	/* { "Firefox",      NULL,   NULL,       1 << 8,       0,           -1 }, */
-	/* { "st-256color",  NULL,   NULL,       1 << 0,       0,           -1 }, */
-	{ "Google-chrome",NULL,   NULL,       1 << 0,            0,           -1 },
-	/* { "Emacs",        NULL,   NULL,       1 << 1,         0,           -1 }, */
-	{ "zoom",         NULL,   NULL,       1 << 2,         0,           -1 },
-	{ "DBeaver",      NULL,   NULL,       1 << 3,         0,           -1 },
+	{  NULL,          NULL,   "tmux",     1 << 6,       0,           -1 },
+	{ "Chromium",     NULL,   NULL,       1 << 1,       0,           -1 },
+	{ "Emacs",        NULL,   NULL,       1 << 2,       0,           -1 },
+	/* { "zoom",         NULL,   NULL,       1 << 2,         0,           -1 }, */
+	/* { "DBeaver",      NULL,   NULL,       1 << 3,         0,           -1 }, */
 };
 
 /* layout(s) */
@@ -61,15 +61,19 @@ static const Layout layouts[] = {
 	{ "TTT",      bstack },
 	{ "===",      bstackhoriz },
 };
+void swaptags(const Arg *arg);
+void copytags(const Arg *arg);
 
 /* key definitions */
 #define MODKEY Mod4Mask
-/* #define MODKEY2 Mod4Mask */
+#define MODKEY2 Mod1Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
+	{ MODKEY,                       KEY,      comboview,      {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ MODKEY|ShiftMask,             KEY,      combotag,       {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} }, \
+	{ MODKEY|MODKEY2,               KEY,      copytags,       {.ui = 1 << TAG} }, \
+	{ MODKEY|MODKEY2|ShiftMask,     KEY,      swaptags,       {.ui = 1 << TAG} },
 #define STACKKEYS(MOD,ACTION) \
 	{ MOD, XK_j,     ACTION##stack, {.i = INC(+1) } }, \
 	{ MOD, XK_k,     ACTION##stack, {.i = INC(-1) } }, \
@@ -77,8 +81,7 @@ static const Layout layouts[] = {
 	{ MOD, XK_m,     ACTION##stack, {.i = 0 } }, \
 	{ MOD, XK_a,     ACTION##stack, {.i = 1 } }, \
 	{ MOD, XK_z,     ACTION##stack, {.i = -1 } },
-/* helper for spawning shell commands in the pre dwm-5.0 fashion */
-#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
+
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
@@ -155,3 +158,44 @@ static Button buttons[] = {
 	{ ClkTagBar,            MODKEY,         Button3,        toggletag,      {0} },
 };
 
+void
+swaptags(const Arg *arg)
+{
+	unsigned int newtag = arg->ui & TAGMASK;
+	unsigned int curtag = selmon->tagset[selmon->seltags];
+
+	if (newtag == curtag || !curtag || (curtag & (curtag-1)))
+		return;
+
+	for (Client *c = selmon->clients; c != NULL; c = c->next) {
+		if((c->tags & newtag) || (c->tags & curtag))
+			c->tags ^= curtag ^ newtag;
+
+		if(!c->tags) c->tags = newtag;
+	}
+
+	selmon->tagset[selmon->seltags] = newtag;
+
+	focus(NULL);
+	arrange(selmon);
+}
+
+void
+copytags(const Arg *arg) {
+	unsigned int curtag = selmon->tagset[selmon->seltags];
+	unsigned int newtag = arg->ui & TAGMASK;
+
+	if (newtag == curtag || !curtag)
+		return;
+
+	/* char command[128]; */
+	/* snprintf(command,sizeof(command),"echo current tag:%d > /home/sriram/dwm.log",curtag); */
+	/* system(command); */
+	for (Client *c = selmon->clients; c != NULL; c = c->next) {
+		if(c->tags & curtag) {
+			c->tags |= newtag;
+		}
+	}
+	focus(NULL);
+	arrange(selmon);
+}
