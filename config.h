@@ -26,7 +26,7 @@ static const unsigned int alphas[][3]      = {
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
 };
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -34,17 +34,18 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class            instance    title                 tags mask             isfloating   monitor */
-	{ "Gimp",            NULL,      NULL,                             0,           1,           -1 },
-	{ "st-256color",     NULL,     "parthasarathy",                1<<2,           0,           -1 },
-	{ "firefox",         NULL,      NULL,                        1 << 1,           0,           -1 },
-	{ "Chromium",        NULL,      NULL,                        1 << 1,           0,           -1 },
-	{ "Chromium",        NULL,      "YouTube",                   1 << 8,           0,           -1 },
-	{ "Emacs",           NULL,      NULL,                        1 << 2,           0,           -1 },
-	{ "jetbrains-idea",  NULL,      NULL,                        1 << 3,           0,           -1 },
-	{ "DBeaver",         NULL,      NULL,                        1 << 3,           0,           -1 },
-	{ "Slack",           NULL,      NULL,                        1 << 4,           0,           -1 },
-	{ "discord",         NULL,      NULL,                        1 << 4,           0,           -1 },
-	{ "zoom",            NULL,      NULL,                        1 << 4,           0,           -1 },
+	{ "Gimp",            NULL,      NULL,                  0,                     1,           -1 },
+	{ "st-256color",     NULL,     "parthasarathy",        1<<2,                  0,           -1 },
+	{ "firefox",         NULL,      NULL,                  1 << 1,                0,           -1 },
+	{ "Chromium",        NULL,      NULL,                  1 << 1,                0,           -1 },
+	{ "Emacs",           NULL,      NULL,                  1 << 2,                0,           -1 },
+	{ "jetbrains-idea",  NULL,      NULL,                  1 << 2,                0,           -1 },
+	{ "DBeaver",         NULL,      NULL,                  1 << 2,                0,           -1 },
+	{ "Slack",           NULL,      NULL,                  1 << 3,                0,           -1 },
+	{ "discord",         NULL,      NULL,                  1 << 3,                0,           -1 },
+	{ "zoom",            NULL,      NULL,                  1 << 3,                0,           -1 },
+	{ NULL,              NULL,      "Prime Video",         1 << 6,                0,           -1 },
+	{ NULL,              NULL,      "YouTube",             1 << 8,                0,           -1 },
 };
 
 /* layout(s) */
