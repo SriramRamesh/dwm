@@ -1,12 +1,12 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const int gappx     = 15;                 /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const char *fonts[]          = {"Hack:pixelsize=28","FontAwesome:pixelsize=28",  "Caskaydia Cove Nerd Font:pixelsize=35" };
+static const char *fonts[]          = {"FontAwesome:pixelsize=35","Caskaydia Cove Nerd Font:pixelsize=35" ,"Hack:pixelsize=28"  };
 static const char dmenufont[]       = "monospace:size=10";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
@@ -26,7 +26,7 @@ static const unsigned int alphas[][3]      = {
 	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
 };
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -34,11 +34,12 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class            instance    title                 tags mask             isfloating   monitor */
-	{ "Gimp",            NULL,      NULL,                            0,            1,           -1 },
-	{ "st-256color",     NULL,     "parthasarathy",   (1 << 0) + (1<<6),           0,           -1 },
-	{ "firefox",         NULL,      NULL,             (1 << 1) + (1<<6),           0,           -1 },
-	{ "Chromium",        NULL,      NULL,             (1 << 1) + (1<<6),           0,           -1 },
-	{ "Emacs",           NULL,      NULL,             (1 << 2) + (1<<6),           0,           -1 },
+	{ "Gimp",            NULL,      NULL,                             0,           1,           -1 },
+	{ "st-256color",     NULL,     "parthasarathy",                1<<2,           0,           -1 },
+	{ "firefox",         NULL,      NULL,                        1 << 1,           0,           -1 },
+	{ "Chromium",        NULL,      NULL,                        1 << 1,           0,           -1 },
+	{ "Chromium",        NULL,      "YouTube",                   1 << 8,           0,           -1 },
+	{ "Emacs",           NULL,      NULL,                        1 << 2,           0,           -1 },
 	{ "jetbrains-idea",  NULL,      NULL,                        1 << 3,           0,           -1 },
 	{ "DBeaver",         NULL,      NULL,                        1 << 3,           0,           -1 },
 	{ "Slack",           NULL,      NULL,                        1 << 4,           0,           -1 },
