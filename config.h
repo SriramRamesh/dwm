@@ -19,14 +19,18 @@ static const char col_black[]       = "#000000";
 static const unsigned int baralpha = 190; // value b/w 0(transparent) & 255 (OPAQUE)
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
-	/*               fg           bg         border   */
-	[SchemeNorm] = { col_gray3,  col_black, col_gray2 },
-	[SchemeSel]  = { col_orange, col_black, col_gray2 },
+	/*                   fg           bg         border   */
+	[SchemeEmpty]  = { col_gray2,  col_black,  col_black },
+	[SchemeNorm]   = { col_gray3,  col_black,  col_black  },
+	[SchemeSel]    = { col_orange, col_black,  col_black },
+	[SchemeTitle]  = { col_orange, col_black,  col_black },
 };
 static const unsigned int alphas[][3]      = {
-	/*               fg      bg        border     */
-	[SchemeNorm] = { OPAQUE, baralpha, borderalpha },
-	[SchemeSel]  = { OPAQUE, baralpha, borderalpha },
+	/*                   fg      bg        border     */
+	[SchemeEmpty]  = { OPAQUE, baralpha, borderalpha },
+	[SchemeNorm]   = { OPAQUE, baralpha, borderalpha },
+	[SchemeSel]    = { OPAQUE, baralpha, borderalpha },
+	[SchemeTitle]  = { OPAQUE, baralpha, borderalpha },
 };
 /* tagging */
 static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
