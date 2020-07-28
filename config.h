@@ -4,7 +4,7 @@
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const int gappx              = 15;       /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const int rmaster            = 1;        /* 1 means master-area is initially on the right */
+static const int rmaster            = 0;        /* 1 means master-area is initially on the right */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = {"FontAwesome:pixelsize=35","Caskaydia Cove Nerd Font:pixelsize=35" ,"Hack:pixelsize=28"  };
@@ -34,7 +34,7 @@ static const unsigned int alphas[][3]      = {
 	[SchemeTitle]  = { OPAQUE, baralpha, borderalpha },
 };
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -43,7 +43,6 @@ static const Rule rules[] = {
 	 */
 	/* class            instance    title                 tags mask             isfloating   monitor */
 	{ "Gimp",            NULL,      NULL,                  0,                     1,           -1 },
-	{ "st-256color",     NULL,     "parthasarathy",        1<<2,                  0,           -1 },
 	{ "firefox",         NULL,      NULL,                  1 << 1,                0,           -1 },
 	{ "Chromium",        NULL,      NULL,                  1 << 1,                0,           -1 },
 	{ "Emacs",           NULL,      NULL,                  1 << 2,                0,           -1 },
@@ -52,7 +51,8 @@ static const Rule rules[] = {
 	{ "Slack",           NULL,      NULL,                  1 << 3,                0,           -1 },
 	{ "discord",         NULL,      NULL,                  1 << 3,                0,           -1 },
 	{ "zoom",            NULL,      NULL,                  1 << 3,                0,           -1 },
-	{ NULL,              NULL,      "Prime Video",         1 << 6,                0,           -1 },
+	{ "st-256color",     NULL,      "oracle",              1 << 5,                0,           -1 },
+	{ NULL,              NULL,      "Prime Video",         1 << 7,                0,           -1 },
 	{ NULL,              NULL,      "YouTube",             1 << 8,                0,           -1 },
 };
 
