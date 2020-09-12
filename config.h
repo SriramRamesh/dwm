@@ -5,6 +5,7 @@ static const unsigned int borderpx  = 0;        /* border pixel of windows */
 static const int gappx              = 15;       /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int rmaster            = 0;        /* 1 means master-area is initially on the right */
+static const int firsttime            = 0;        /* 1 means master-area is initially on the right */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = {"FontAwesome:pixelsize=35","Caskaydia Cove Nerd Font:pixelsize=35" ,"Hack:pixelsize=28"  };
@@ -16,6 +17,9 @@ static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
 static const char col_orange[]      = "#e0602d";
 static const char col_black[]       = "#000000";
+static const char col_red[]         = "#ff0000";
+static const char col_yellow[]      = "#ffff00";
+static const char col_white[]       = "#ffffff";
 
 static const unsigned int baralpha = 190; // value b/w 0(transparent) & 255 (OPAQUE)
 static const unsigned int borderalpha = OPAQUE;
@@ -23,6 +27,8 @@ static const char *colors[][3]      = {
 	/*                   fg           bg         border   */
 	[SchemeEmpty]  = { col_gray2,  col_black,  col_black },
 	[SchemeNorm]   = { col_gray3,  col_black,  col_black  },
+	[SchemeWarn] =	 { col_black, col_yellow, col_red },
+	[SchemeUrgent]=	 { col_white, col_red,    col_red },
 	[SchemeSel]    = { col_orange, col_black,  col_black },
 	[SchemeTitle]  = { col_orange, col_black,  col_black },
 };
@@ -41,19 +47,20 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class            instance    title                 tags mask             isfloating   monitor */
-	{ "Gimp",            NULL,      NULL,                  0,                     1,           -1 },
-	{ "firefox",         NULL,      NULL,                  1 << 1,                0,           -1 },
-	{ "Chromium",        NULL,      NULL,                  1 << 1,                0,           -1 },
-	{ "Emacs",           NULL,      NULL,                  1 << 2,                0,           -1 },
-	{ "jetbrains-idea",  NULL,      NULL,                  1 << 2,                0,           -1 },
-	{ "DBeaver",         NULL,      NULL,                  1 << 2,                0,           -1 },
-	{ "Slack",           NULL,      NULL,                  1 << 3,                0,           -1 },
-	{ "discord",         NULL,      NULL,                  1 << 3,                0,           -1 },
-	{ "zoom",            NULL,      NULL,                  1 << 3,                0,           -1 },
-	{ "st-256color",     NULL,      "oracle",              1 << 5,                0,           -1 },
-	{ NULL,              NULL,      "Prime Video",         1 << 7,                0,           -1 },
-	{ NULL,              NULL,      "YouTube",             1 << 8,                0,           -1 },
+	/* class            instance    title                 tags mask             isfloating  canfocus issticky monitor */
+	{ NULL,              NULL,      "Picture in picture",  0,                     1,         1,         0,     -1 },
+	{ "Gimp",            NULL,      NULL,                  0,                     1,         1,         0,     -1 },
+	{ "firefox",         NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
+	{ "Chromium",        NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
+	{ "Emacs",           NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
+	{ "jetbrains-idea",  NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
+	{ "DBeaver",         NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
+	{ "Slack",           NULL,      NULL,                  1 << 3,                0,         1,         0,     -1 },
+	{ "discord",         NULL,      NULL,                  1 << 3,                0,         1,         0,     -1 },
+	{ "zoom",            NULL,      NULL,                  1 << 3,                0,         1,         0,     -1 },
+	{ "st-256color",     NULL,      "oracle",              1 << 5,                0,         1,         0,     -1 },
+	{ NULL,              NULL,      "Prime Video",         1 << 7,                0,         1,         0,     -1 },
+	{ NULL,              NULL,      "YouTube",             1 << 8,                0,         1,         0,     -1 },
 };
 
 /* layout(s) */

@@ -67,7 +67,7 @@
 
 /* enums */
 enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
-enum { SchemeEmpty, SchemeNorm, SchemeSel, SchemeTitle }; /* color schemes */
+enum { SchemeEmpty, SchemeNorm, SchemeWarn, SchemeUrgent, SchemeSel, SchemeTitle }; /* color schemes */
 enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
        NetWMWindowTypeDialog, NetClientList, NetLast }; /* EWMH atoms */
@@ -100,7 +100,7 @@ struct Client {
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
 	unsigned int tags;
-	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, issticky;
+	int isfixed, isfloating, canfocus, isurgent, neverfocus, oldstate, isfullscreen, issticky;
 	Client *next;
 	Client *snext;
 	Monitor *mon;
@@ -133,6 +133,7 @@ struct Monitor {
 	unsigned int sellt;
 	unsigned int tagset[2];
 	int rmaster;
+	int firsttime;
 	int showbar;
 	int topbar;
 	Client *clients;
@@ -150,6 +151,8 @@ typedef struct {
 	const char *title;
 	unsigned int tags;
 	int isfloating;
+    int canfocus;
+	int issticky;
 	int monitor;
 } Rule;
 
@@ -416,6 +419,8 @@ applyrules(Client *c)
 
 	/* rule matching */
 	c->isfloating = 0;
+    c->canfocus = 1;
+	c->issticky = 0;
 	c->tags = 0;
 	XGetClassHint(dpy, c->win, &ch);
 	class    = ch.res_class ? ch.res_class : broken;
@@ -428,6 +433,8 @@ applyrules(Client *c)
 		&& (!r->instance || strstr(instance, r->instance)))
 		{
 			c->isfloating = r->isfloating;
+			c->canfocus = r->canfocus;
+			c->issticky = r->issticky;
 			c->tags |= r->tags;
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
@@ -880,12 +887,63 @@ drawbar(Monitor *m)
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
 	Client *c;
+	/* Check the amount of left padding*/
+	int count = 0;
+	for(int indx = 0; indx < strlen(stext); indx++){
+		if ((unsigned int)stext[indx] < LENGTH(colors)){
+			count++;
+		}
+	}
+	/* char stext2[270]; */
+	/* for(int i=0;i<2*count;i++){ */
+	/* 	stext2[i] = ' '; */
+	/* } */
+	/* count*=2; */
+	/* for(int j=0;j<strlen(stext);j++){ */
+	/* 	stext2[j+count]= stext[j]; */
+	/* } */
+	/* if(m->firsttime == 0){ */
+	/* 	char command2[250]; */
+	/* 	snprintf(command2,sizeof(command2),"echo final stext2:%s >> /home/sriram/dwm.log", */
+	/* 			 stext2); */
+	/* 	system(command2); */
+	/* } */
+	char *ts = stext;
+	char *tp = stext;
+	char ctmp;
+	int tx = lrpad*count;
+	/* end chec */
+
 
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
 		drw_setscheme(drw, scheme[SchemeNorm]);
 		tw = TEXTW(stext) - lrpad + 2; /* 2px right padding */
-		drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0);
+		/* drw_text(drw, m->ww - tw, 0, tw, bh, 0, stext, 0); */
+		while (1) {
+			if ((unsigned int)*ts > LENGTH(colors)) { ts++; continue ; }
+
+			ctmp = *ts;
+			*ts = '\0';
+
+			drw_text(drw, m->ww - tw + tx, 0, tw - tx, bh, 0, tp, 0);
+
+			tx += TEXTW(tp) - lrpad;
+
+			/* if(m->firsttime == 0){ */
+			/* 	char command2[128]; */
+			/* 	snprintf(command2,sizeof(command2),"echo end tx:%d >> /home/sriram/dwm.log", */
+			/* 			 (unsigned int)tx); */
+			/* 	system(command2); */
+			/* free(command2); */
+			/* } */
+
+			if (ctmp == '\0') { break; }
+			drw_setscheme(drw, scheme[(unsigned int)(ctmp-1)]);
+			*ts = ctmp;
+			tp = ++ts;
+		}
+		m->firsttime =1;
 	}
 
 	for (c = m->clients; c; c = c->next) {
@@ -968,6 +1026,19 @@ focus(Client *c)
 	if (selmon->sel && selmon->sel != c)
 		unfocus(selmon->sel, 0);
 	if (c) {
+		if (!c->canfocus){
+			/* char command[128]; */
+			/* char nextname[256] = "NULL"; */
+			/* char snextname[256] = "NULL"; */
+			/* if(c->next) strcpy(nextname, c->next->name); */
+			/* if(c->snext) strcpy(snextname, c->snext->name); */
+			/* snprintf(command,sizeof(command), */
+			/* 		 "echo inside can focus:%s snext:%s > /home/sriram/dwm.log", */
+			/* 		 nextname, */
+			/* 		 snextname); */
+			/* system(command); */
+			return;
+		}
 		if (c->mon != selmon)
 			selmon = c->mon;
 		if (c->isurgent)
@@ -1018,8 +1089,8 @@ focusstack(const Arg *arg)
 	if(i < 0)
 		return;
 
-	for(p = NULL, c = selmon->clients; c && (i || !ISVISIBLE(c));
-		i -= ISVISIBLE(c) ? 1 : 0, p = c, c = c->next);
+	for(p = NULL, c = selmon->clients; c && (i || !ISVISIBLE(c) || !c->canfocus);
+		i -= (ISVISIBLE(c) && c->canfocus) ? 1 : 0, p = c, c = c->next);
 	focus(c ? c : p);
 	restack(selmon);
 }
@@ -2744,7 +2815,7 @@ bstackhoriz(Monitor *m)
 
 	if (m->nmaster && n > m->nmaster) {
 		sh = (mh - m->gappx) * (1 - m->mfact);
-		mh = (mh - m->gappx) * m->mfact;
+		mh = (mh - m->gappx) * (m->rmaster ? 1.0 - m->mfact : m->mfact);
 		sy = my + mh + m->gappx;
 		sh = m->wh - mh - 2*m->gappx - m->gappx * (n - m->nmaster);
 		sw = m->ww - 2*m->gappx;
@@ -2752,11 +2823,15 @@ bstackhoriz(Monitor *m)
 
 	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
 		if (i < m->nmaster) {
-			resize(c, mx, my, mw / MIN(n, m->nmaster) - (2*c->bw), mh - (2*c->bw), 0);
+			resize(c, mx, m->rmaster?
+				   my + m->wh - mh - 2*m->gappx:
+				   my, mw / MIN(n, m->nmaster) - (2*c->bw), mh - (2*c->bw), 0);
 			if(mx + WIDTH(c) + m->gappx < m->mw)
 				mx += WIDTH(c) + m->gappx;
 		} else {
-			resize(c, sx, sy, sw - (2*c->bw), sh / (n - MIN(n, m->nmaster)) - (2*c->bw), 0);
+			resize(c, sx, m-> rmaster?
+				   sy - mh - m->gappx
+				   : sy, sw - (2*c->bw), sh / (n - MIN(n, m->nmaster)) - (2*c->bw), 0);
 			if(sy + HEIGHT(c) + m->gappx < m->mh)
 				sy += HEIGHT(c) + m->gappx;
 		}

@@ -14,6 +14,11 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#eeeeee";
 static const char col_cyan[]        = "#005577";
+static const char col_black[]       = "#000000";
+static const char col_red[]         = "#ff0000";
+static const char col_yellow[]      = "#ffff00";
+static const char col_white[]       = "#ffffff";
+
 static const unsigned int baralpha = 0xd0;
 static const unsigned int borderalpha = OPAQUE;
 static const char *colors[][3]      = {
@@ -21,6 +26,8 @@ static const char *colors[][3]      = {
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeEmpty]  = { col_gray4, col_cyan,  col_cyan  },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeWarn] =	 { col_black, col_yellow, col_red },
+	[SchemeUrgent]=	 { col_white, col_red,    col_red },
 	[SchemeTitle]  = { col_gray4, col_cyan,  col_cyan  },
 };
 static const unsigned int alphas[][3]      = {
@@ -37,9 +44,9 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/* class      instance    title       tags mask     isfloating canfocus  isstikcy  monitor */
+	{ "Gimp",     NULL,       NULL,       0,            1,         1,        1,          -1 },
+	{ "Firefox",  NULL,       NULL,       1 << 8,       0,         1,        1,          -1 },
 };
 
 /* layout(s) */
