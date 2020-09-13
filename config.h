@@ -39,6 +39,14 @@ static const unsigned int alphas[][3]      = {
 	[SchemeSel]    = { OPAQUE, baralpha, borderalpha },
 	[SchemeTitle]  = { OPAQUE, baralpha, borderalpha },
 };
+static const char *const autostart[] = {
+	"st", NULL,
+	"chromium", "https://github.com/trending", NULL,
+	"emacs", NULL,
+	"fish", "-c", "start &>> /home/sriram/.dwm/log", NULL,
+	NULL /* terminate */
+};
+
 /* tagging */
 static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
