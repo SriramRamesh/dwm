@@ -40,10 +40,11 @@ static const unsigned int alphas[][3]      = {
 	[SchemeTitle]  = { OPAQUE, baralpha, borderalpha },
 };
 static const char *const autostart[] = {
-	"st", NULL,
 	"chromium", "https://github.com/trending", NULL,
 	"emacs", NULL,
 	"fish", "-c", "start &>> /home/sriram/.dwm/log", NULL,
+	"workrave", NULL,
+	"st", NULL,
 	NULL /* terminate */
 };
 
@@ -117,14 +118,19 @@ static const char *dmenucmd[] = { "dmenu_run","-m", dmenumon, "-fn", dmenufont, 
 static const char *termcmd[]  = { "st", NULL };
 static const char *chromecmd[]  = { "chromium", NULL };
 static const char *emacscmd[]  = { "emacs", NULL };
+static const char *personalemacscmd[] = { "emacs", "--with-profile","personal", NULL};
+static const char *bluetoothcmd[]  = { "fish","-c", "soundtouch", NULL };
+static const char *wificmd[]  = { "fish", "-c", "batman5G"};
 
 static Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_space,      spawn,          {.v = dmenucmd } },
+	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY|ShiftMask,             XK_c,      spawn,          {.v = chromecmd } },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = emacscmd } },
-	{ MODKEY,                       XK_b,      togglebar,      {0} },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = personalemacscmd } },
+	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
+	{ MODKEY,                       XK_b,      spawn,          {.v = bluetoothcmd} },
 	STACKKEYS(MODKEY,                          focus)
 	STACKKEYS(MODKEY|ShiftMask,                push)
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
