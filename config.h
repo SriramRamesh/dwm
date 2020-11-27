@@ -49,7 +49,7 @@ static const char *const autostart[] = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -104,6 +104,10 @@ void copytags(const Arg *arg);
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,       {.ui = 1 << TAG} }, \
 	{ MODKEY|MODKEY2,               KEY,      copytags,        {.ui = 1 << TAG} }, \
 	{ MODKEY|MODKEY2|ShiftMask,     KEY,      swaptags,        {.ui = 1 << TAG} },
+#define TAGKEYS2(KEY,TAG) \
+	{ MODKEY,                       KEY,      combopertagview, {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY,      toggleview,      {.ui = 1 << TAG} }, \
+	{ MODKEY|ShiftMask,             KEY,      toggletag,       {.ui = 1 << TAG} },
 #define STACKKEYS(MOD,ACTION) \
 	{ MOD, XK_j,     ACTION##stack, {.i = INC(+1) } }, \
 	{ MOD, XK_k,     ACTION##stack, {.i = INC(-1) } }, \
@@ -129,7 +133,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY|ShiftMask,             XK_c,      spawn,          {.v = chromecmd } },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = emacscmd } },
-	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = personalemacscmd } },
+	/* { MODKEY,                       XK_e,      spawn,          {.v = personalemacscmd } }, */
 	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_b,      spawn,          {.v = bluetoothcmd} },
 	STACKKEYS(MODKEY,                          focus)
@@ -140,7 +144,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY,                       XK_q,      killclient,     {0} },
+	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ShiftMask,             XK_m,      setlayout,      {.v = &layouts[2]} },
@@ -154,6 +158,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_x,      setlayout,      {.v = &layouts[9]} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_r,      togglermaster,  {0} },
+	/* { MODKEY|ShiftMask,             XK_r,      applyrules,  {0} }, */
 	{ MODKEY,                       XK_s,      togglesticky,   {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
@@ -164,8 +169,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_minus,  setgaps,        {.i = -5 } },
 	{ MODKEY,                       XK_equal,  setgaps,        {.i = +5 } },
 	{ MODKEY|ShiftMask,             XK_equal,  setgaps,        {.i = 0  } },
-	{ MODKEY,                       XK_n,      shiftviewclients,  { .i = +1 } },
-	{ MODKEY,                       XK_p,      shiftviewclients,  { .i = -1 } },
+	{ MODKEY|ShiftMask,             XK_l,      shiftview,      { .i = +1 } },
+	{ MODKEY|ShiftMask,             XK_h,      shiftview,      { .i = -1 } },
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
@@ -175,7 +180,9 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	{ MODKEY|ShiftMask,             XK_Escape,      quit,           {0} },
+	TAGKEYS2(                       XK_w,                      4)
+	TAGKEYS2(                       XK_p,                      5)
+	{ MODKEY|ShiftMask,             XK_Escape, quit,           {0} },
 	{ MODKEY,                       XK_Escape, quit,           {1} },
 
 };

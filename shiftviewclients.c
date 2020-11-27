@@ -4,7 +4,7 @@
  *          or left (negative value)
  */
 void
-shiftviewclients(const Arg *arg)
+shiftview(const Arg *arg)
 {
 	Arg shifted;
 	Client *c;
