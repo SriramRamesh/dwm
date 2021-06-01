@@ -2,7 +2,7 @@
 
 /* appearance */
 static const unsigned int borderpx  = 0;        /* border pixel of windows */
-static const int gappx              = 15;       /* gaps between windows */
+static const int gappx              = 30;       /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int rmaster            = 0;        /* 1 means master-area is initially on the right */
 static const int firsttime            = 0;        /* 1 means master-area is initially on the right */
@@ -20,6 +20,7 @@ static const char col_black[]       = "#000000";
 static const char col_red[]         = "#ff0000";
 static const char col_yellow[]      = "#ffff00";
 static const char col_white[]       = "#ffffff";
+static const char col_skyblue[]     = "#589CE7";
 
 static const unsigned int baralpha = 190; // value b/w 0(transparent) & 255 (OPAQUE)
 static const unsigned int borderalpha = OPAQUE;
@@ -27,10 +28,10 @@ static const char *colors[][3]      = {
 	/*                   fg           bg         border   */
 	[SchemeEmpty]  = { col_gray2,  col_black,  col_black },
 	[SchemeNorm]   = { col_gray3,  col_black,  col_black  },
-	[SchemeWarn] =	 { col_black, col_yellow, col_red },
-	[SchemeUrgent]=	 { col_white, col_red,    col_red },
-	[SchemeSel]    = { col_orange, col_black,  col_black },
-	[SchemeTitle]  = { col_orange, col_black,  col_black },
+	[SchemeWarn] =	 { col_black,  col_yellow, col_red },
+	[SchemeUrgent]=	 { col_white,  col_red,    col_red },
+	[SchemeSel]    = { col_skyblue, col_black,  col_black },
+	[SchemeTitle]  = { col_skyblue, col_black,  col_black },
 };
 static const unsigned int alphas[][3]      = {
 	/*                   fg      bg        border     */
@@ -40,7 +41,7 @@ static const unsigned int alphas[][3]      = {
 	[SchemeTitle]  = { OPAQUE, baralpha, borderalpha },
 };
 static const char *const autostart[] = {
-	"chromium", "https://github.com/trending", NULL,
+	"firefox-developer-edition", "https://github.com/trending", NULL,
 	"emacs", NULL,
 	"fish", "-c", "start &>> /home/sriram/.dwm/log", NULL,
 	"workrave", NULL,
@@ -49,7 +50,7 @@ static const char *const autostart[] = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -61,6 +62,7 @@ static const Rule rules[] = {
 	{ "Gimp",            NULL,      NULL,                  0,                     1,         1,         0,     -1 },
 	{ "firefox",         NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
 	{ "Chromium",        NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
+	{ "Google-chrome",        NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
 	{ "Emacs",           NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
 	{ "jetbrains-idea",  NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
 	{ "DBeaver",         NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
@@ -98,16 +100,16 @@ void copytags(const Arg *arg);
 #define MODKEY Mod4Mask
 #define MODKEY2 Mod1Mask
 #define TAGKEYS(KEY,TAG) \
-	{ MODKEY,                       KEY,      combopertagview, {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,      {.ui = 1 << TAG} }, \
+	{ MODKEY,                       KEY,      toggleview,      {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY,      combopertagview, {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      combotag,        {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,       {.ui = 1 << TAG} }, \
 	{ MODKEY|MODKEY2,               KEY,      copytags,        {.ui = 1 << TAG} }, \
 	{ MODKEY|MODKEY2|ShiftMask,     KEY,      swaptags,        {.ui = 1 << TAG} },
-#define TAGKEYS2(KEY,TAG) \
-	{ MODKEY,                       KEY,      combopertagview, {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,      {.ui = 1 << TAG} }, \
-	{ MODKEY|ShiftMask,             KEY,      toggletag,       {.ui = 1 << TAG} },
+/* #define TAGKEYS2(KEY,TAG) \ */
+/* 	{ MODKEY,                       KEY,      toggleview, {.ui = 1 << TAG} }, \ */
+/* 	{ MODKEY|ControlMask,           KEY,      combopertagview,      {.ui = 1 << TAG} }, \ */
+/* 	{ MODKEY|ShiftMask,             KEY,      toggletag,       {.ui = 1 << TAG} }, */
 #define STACKKEYS(MOD,ACTION) \
 	{ MOD, XK_j,     ACTION##stack, {.i = INC(+1) } }, \
 	{ MOD, XK_k,     ACTION##stack, {.i = INC(-1) } }, \
@@ -121,9 +123,15 @@ void copytags(const Arg *arg);
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run","-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
-static const char *chromecmd[]  = { "chromium", NULL };
+static const char *chromecmd[]  = { "firefox-developer-edition", NULL };
 static const char *emacscmd[]  = { "emacs", NULL };
 static const char *personalemacscmd[] = { "emacs", "--with-profile","personal", NULL};
+static const char *mpcprev[] = { "mpc","prev", NULL};
+static const char *mpctoggle[] = { "mpc","toggle", NULL};
+static const char *mpcnext[] = { "mpc","next", NULL};
+static const char *amixertoggle[] = {   "amixer", "set", "Master", "toggle", NULL};
+static const char *amixerdec[] = {    "amixer", "set", "Master", "5%-" , NULL};
+static const char *amixerinc[] = {    "amixer", "set", "Master", "5%+" , NULL};
 static const char *bluetoothcmd[]  = { "fish","-c", "soundtouch", NULL };
 static const char *wificmd[]  = { "fish", "-c", "batman5G"};
 
@@ -133,6 +141,13 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY|ShiftMask,             XK_c,      spawn,          {.v = chromecmd } },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = emacscmd } },
+	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = personalemacscmd } },
+	{ 0,                            XK_F5,     spawn,          {.v = mpcprev } }, \
+	{ 0,                            XK_F6,     spawn,          {.v = mpctoggle } }, \
+	{ 0,                            XK_F7,     spawn,          {.v = mpcnext } },	\
+	{ 0,                            XK_F10,    spawn,          {.v = amixertoggle } },	\
+	{ 0,                            XK_F11,    spawn,          {.v = amixerdec } },	\
+	{ 0,                            XK_F12,    spawn,          {.v = amixerinc } },	\
 	/* { MODKEY,                       XK_e,      spawn,          {.v = personalemacscmd } }, */
 	{ MODKEY|ShiftMask,             XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_b,      spawn,          {.v = bluetoothcmd} },
@@ -144,7 +159,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
-	{ MODKEY|ShiftMask,             XK_q,      killclient,     {0} },
+	{ MODKEY,                       XK_q,      killclient,     {0} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY|ShiftMask,             XK_m,      setlayout,      {.v = &layouts[2]} },
@@ -180,8 +195,8 @@ static Key keys[] = {
 	TAGKEYS(                        XK_7,                      6)
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
-	TAGKEYS2(                       XK_w,                      4)
-	TAGKEYS2(                       XK_p,                      5)
+	/* TAGKEYS(                        XK_w,                      4) */
+	/* TAGKEYS(                        XK_p,                      5) */
 	{ MODKEY|ShiftMask,             XK_Escape, quit,           {0} },
 	{ MODKEY,                       XK_Escape, quit,           {1} },
 
