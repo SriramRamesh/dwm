@@ -92,6 +92,7 @@ static const Layout layouts[] = {
 };
 void swaptags(const Arg *arg);
 void copytags(const Arg *arg);
+void winview2(const Arg *arg);
 
 /* key definitions */
 #define MODKEY Mod4Mask
@@ -197,6 +198,7 @@ static Key keys[] = {
 	/* TAGKEYS(                        XK_w,                      4) */
 	/* TAGKEYS(                        XK_p,                      5) */
 	{ MODKEY|ShiftMask,             XK_Escape, quit,           {0} },
+	{ MODKEY|ShiftMask,             XK_f,      winview2,       {0} },
 	{ MODKEY,                       XK_Escape, quit,           {1} },
 
 };
@@ -258,4 +260,11 @@ copytags(const Arg *arg) {
 	}
 	focus(NULL);
 	arrange(selmon);
+}
+
+void
+winview2(const Arg *arg){
+	winview(arg);
+	Arg a = {.v = &layouts[2]};
+	setlayout(&a);
 }
