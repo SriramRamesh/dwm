@@ -30,8 +30,8 @@ static const char *colors[][3]      = {
 	[SchemeNorm]   = { col_gray3,  col_black,  col_black  },
 	[SchemeWarn] =	 { col_black,  col_yellow, col_red },
 	[SchemeUrgent]=	 { col_white,  col_red,    col_red },
-	[SchemeSel]    = { col_skyblue, col_black,  col_black },
-	[SchemeTitle]  = { col_skyblue, col_black,  col_black },
+	[SchemeSel]    = { col_orange, col_black,  col_black },
+	[SchemeTitle]  = { col_orange, col_black,  col_black },
 };
 static const unsigned int alphas[][3]      = {
 	/*                   fg      bg        border     */
@@ -50,7 +50,7 @@ static const char *const autostart[] = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "", "", "" };
+static const char *tags[] = { "", "", "", "", "", "", "","", "" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -61,17 +61,14 @@ static const Rule rules[] = {
 	{ NULL,              NULL,      "Picture in picture",  0,                     1,         1,         0,     -1 },
 	{ "Gimp",            NULL,      NULL,                  0,                     1,         1,         0,     -1 },
 	{ "firefox",         NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
-	{ "Chromium",        NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
-	{ "Google-chrome",        NULL,      NULL,                  1 << 1,                0,         1,         0,     -1 },
+	/* { "st-256color",     NULL,      "parthasarathy",       1 << 1,                0,         1,         0,     -1 }, */
 	{ "Emacs",           NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
-	{ "jetbrains-idea",  NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
-	{ "DBeaver",         NULL,      NULL,                  1 << 2,                0,         1,         0,     -1 },
 	{ "Slack",           NULL,      NULL,                  1 << 3,                0,         1,         0,     -1 },
 	{ "discord",         NULL,      NULL,                  1 << 3,                0,         1,         0,     -1 },
 	{ "zoom",            NULL,      NULL,                  1 << 3,                0,         1,         0,     -1 },
-	{ "st-256color",     NULL,      "oracle",              1 << 5,                0,         1,         0,     -1 },
 	{ NULL,              NULL,      "Prime Video",         1 << 7,                0,         1,         0,     -1 },
 	{ NULL,              NULL,      "YouTube",             1 << 8,                0,         1,         0,     -1 },
+	{ "Workrave",        "workrave","Workrave",            1 << 8,                1,         1,         0,     -1 },
 };
 
 /* layout(s) */
@@ -124,6 +121,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run","-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *chromecmd[]  = { "firefox-developer-edition", NULL };
+static const char *zathuracmd[]  = { "tabbed","-c","zathura","-e", NULL };
 static const char *emacscmd[]  = { "emacs", NULL };
 static const char *personalemacscmd[] = { "emacs", "--with-profile","personal", NULL};
 static const char *mpcprev[] = { "mpc","prev", NULL};
@@ -140,6 +138,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_space,  spawn,          {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY|ShiftMask,             XK_c,      spawn,          {.v = chromecmd } },
+	{ MODKEY|ShiftMask,             XK_z,      spawn,          {.v = zathuracmd } },
 	{ MODKEY|ShiftMask,             XK_e,      spawn,          {.v = emacscmd } },
 	{ MODKEY|ShiftMask,             XK_p,      spawn,          {.v = personalemacscmd } },
 	{ 0,                            XK_F5,     spawn,          {.v = mpcprev } }, \
